@@ -17,17 +17,15 @@ class Trie {
 
       if(!child) {
         child = new Node(letter);
-        currNode.branch[letter] = child;
+        currNode.branch[letter] = new Node(letter);
       }
       currNode = currNode.branch[letter];
     }
 
-    if (currNode.isCompleteWord) {
-      return;
-    } else {
+    if (!currNode.isCompleteWord) {
       currNode.isCompleteWord = true;
       this.wordCount++;
-    }
+    } 
   }
 
   count() {
