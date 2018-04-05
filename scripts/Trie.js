@@ -1,4 +1,4 @@
-import Node from './Node'
+import Node from './Node';
 
 class Trie {
   constructor() {
@@ -50,26 +50,31 @@ class Trie {
   }
 
   findSuggestion(position, data) {
-    Object.keys(position.branch).forEach( letter => {
-      let currNode = position.branch[letter];
+    if (Object.keys(position.branch).length !== 0) {
+      Object.keys(position.branch).forEach( letter => {
+        let currNode = position.branch[letter];
 
-      if(currNode.isCompleteWord) {
-        return this.suggestions.push(data + letter);
-      }
-    });
+        if(currNode.isCompleteWord) {
+          this.suggestions.push(data + letter);
+        } 
+        this.findSuggestion(currNode, data + letter);
+      });
+    }
   }
 
   suggest(data) {
-    let currPosition = this.findNode(data);
+    this.suggestions = [];
+    let currPosition = this.findNode(data.toLowerCase());
 
     if (currPosition === null) {
       return [];
     }
     this.findSuggestion(currPosition, data);
+    return this.suggestions;
   }
 
   populate(data) {
-    data.forEach( word => this.add(word));
+    data.forEach( word => this.insert(word.toLowerCase()));
   }
 }
 
