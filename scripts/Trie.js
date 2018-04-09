@@ -5,6 +5,8 @@ class Trie {
     this.root = new Node(null);
     this.wordCount = 0;
     this.suggestions = [];
+    this.selectedSuggestions = {};
+    // 
   } 
 
   insert(data) {
@@ -53,6 +55,7 @@ class Trie {
         let currNode = position.branch[letter];
 
         if(currNode.isCompleteWord) {
+          // push in the string and the number of times it's been selected
           this.suggestions.push(data + letter);
         } 
         this.findSuggestion(currNode, data + letter);
@@ -68,9 +71,30 @@ class Trie {
       return [];
     }
     this.findSuggestion(currPosition, data);
-    return this.suggestions;
+    
+    
+    return this.sortSuggestions();
   }
 
+  select(data) {
+    if (!this.selectedSuggestions[data]) {
+      this.selectedSuggestions[data] = 0;
+    }
+    this.selectedSuggestions[data]++;
+
+    return this.selectedSuggestions;
+  }
+
+  sortSuggestions() {
+    return this.suggestions.sort( (a, b) => {
+      const aSelectedCount = this.selectedSuggestions[a] || 0;
+      const bSelectedCount = this.selectedSuggestions[b] || 0;
+      
+      
+      return bSelectedCount - aSelectedCount;
+    })
+  }
+ 
   populate(data) {
     data.forEach( word => this.insert(word.toLowerCase()));
   }
