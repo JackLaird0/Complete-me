@@ -53,12 +53,27 @@ describe('Trie', () => {
   })
 
   it('should populate given the dictionary', () => {
-    const text = "/usr/share/dict/words"
-    const dictionary = fs.readFileSync(text).toString().trim().split('\n')
-    const trie = new Trie()
+    const text = "/usr/share/dict/words";
+    const dictionary = fs.readFileSync(text).toString().trim().split('\n');
+    const trie = new Trie();
 
     trie.populate(dictionary)
 
     assert.equal(trie.wordCount, 234371)
+  })
+
+  it('is should suggest a selected word first', () => {
+    const trie = new Trie();
+
+    trie.insert('app');
+    trie.insert('application');
+    trie.suggest('ap');
+    trie.select('application');
+    trie.suggest('ap');
+
+    assert.deepEqual(trie.suggestions, ['application', 'app'])
+    
+
+    // console.log(trie.)
   })
 })
